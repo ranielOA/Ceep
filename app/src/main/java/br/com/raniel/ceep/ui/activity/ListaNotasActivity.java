@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.com.raniel.ceep.R;
@@ -17,12 +18,15 @@ import br.com.raniel.ceep.ui.recyclerViewAdapter.ListaNotasAdapter;
 
 public class ListaNotasActivity extends AppCompatActivity {
 
+    private ListaNotasAdapter adapter;
+    private List<Nota> todasNotas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_notas);
 
-        List<Nota> todasNotas = notasDeExemplo();
+        todasNotas = notasDeExemplo();
         configuraRecyclerView(todasNotas);
 
         TextView insereNota = findViewById(R.id.lista_notas_insere_nota);
@@ -30,18 +34,20 @@ public class ListaNotasActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent iniciaFormularioNota  = new Intent(ListaNotasActivity.this, FormularioNotaActivity.class);
-                startActivity(iniciaFormularioNota);
+                startActivityForResult(iniciaFormularioNota, 1);
             }
         });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1 && resultCode == 2 && data.hasExtra("nota")){
+            Nota nota = (Nota) data.getSerializableExtra("nota");
+            new NotaDAO().insere(nota);
+            adapter.adiciona(nota);
+        }
 
-        NotaDAO dao = new NotaDAO();
-        List<Nota> todasNotas = dao.todos();
-        configuraRecyclerView(todasNotas);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private List<Nota> notasDeExemplo() {
@@ -58,7 +64,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void configuraRecyclerView(List<Nota> todasNotas) {
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recycleview);
         configuraAdapter(todasNotas, listaNotas);
-//        configuraLayoutManager(listaNotas); //configura o layoutmanager por codigo, porém pode-se configurar direito no xml quando ele for fixo com app:layoutManager
+//        configuraLayoutManager(listaNotas); //configura o layoutmanager por codigo, porém pode-se configurar direto no xml quando ele for fixo com app:layoutManager
 //                                              para colocar um gridlayout adiciona-se o app:spanCount para definir o numero de colunas
     }
 
@@ -68,6 +74,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void configuraAdapter(List<Nota> todasNotas, RecyclerView listaNotas) {
-        listaNotas.setAdapter(new ListaNotasAdapter(this, todasNotas));
+        adapter = new ListaNotasAdapter(this, todasNotas);
+        listaNotas.setAdapter(adapter);
     }
 }

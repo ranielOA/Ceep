@@ -1,5 +1,6 @@
 package br.com.raniel.ceep.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,7 +32,12 @@ public class FormularioNotaActivity extends AppCompatActivity {
             EditText descricao = findViewById(R.id.formulario_nota_descricao);
 
             Nota nota = new Nota(titulo.getText().toString(), descricao.getText().toString());
-            new NotaDAO().insere(nota);
+
+            Intent resultado = new Intent();
+            resultado.putExtra("nota", nota);
+            setResult(2, resultado);
+
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
