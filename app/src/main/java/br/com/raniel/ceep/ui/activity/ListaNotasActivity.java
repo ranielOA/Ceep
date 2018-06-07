@@ -19,8 +19,11 @@ public class ListaNotasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_notas);
 
-        RecyclerView listaNotas = findViewById(R.id.lista_notas_recycleview);
+        List<Nota> todasNotas = notasDeExemplo();
+        configuraRecyclerView(todasNotas);
+    }
 
+    private List<Nota> notasDeExemplo() {
         NotaDAO dao = new NotaDAO();
 
         for(int i = 1; i <= 1000; i++) {
@@ -28,11 +31,22 @@ public class ListaNotasActivity extends AppCompatActivity {
                     "descrição " + i));
         }
 
-        List<Nota> todasNotas = dao.todos();
+        return dao.todos();
+    }
 
-        listaNotas.setAdapter(new ListaNotasAdapter(this, todasNotas));
+    private void configuraRecyclerView(List<Nota> todasNotas) {
+        RecyclerView listaNotas = findViewById(R.id.lista_notas_recycleview);
+        configuraAdapter(todasNotas, listaNotas);
+//        configuraLayoutManager(listaNotas); //configura o layoutmanager por codigo, porém pode-se configurar direito no xml quando ele for fixo com app:layoutManager
+//                                              para colocar um gridlayout adiciona-se o app:spanCount para definir o numero de colunas
+    }
 
+    private void configuraLayoutManager(RecyclerView listaNotas) {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         listaNotas.setLayoutManager(manager);
+    }
+
+    private void configuraAdapter(List<Nota> todasNotas, RecyclerView listaNotas) {
+        listaNotas.setAdapter(new ListaNotasAdapter(this, todasNotas));
     }
 }
