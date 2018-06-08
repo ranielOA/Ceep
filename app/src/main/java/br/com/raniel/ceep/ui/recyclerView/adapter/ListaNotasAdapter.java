@@ -1,4 +1,4 @@
-package br.com.raniel.ceep.ui.recyclerViewAdapter;
+package br.com.raniel.ceep.ui.recyclerView.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,11 +12,13 @@ import java.util.List;
 
 import br.com.raniel.ceep.R;
 import br.com.raniel.ceep.model.Nota;
+import br.com.raniel.ceep.ui.recyclerView.adapter.listener.OnItemClickListener;
 
 public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.NotaViewHolder> {
 
     private final Context context;
     private final List<Nota> notas;
+    private OnItemClickListener onItemClickListener;
 
     public ListaNotasAdapter(Context context, List<Nota> notas) {
         this.context = context;
@@ -47,17 +49,30 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
         notifyDataSetChanged();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     class NotaViewHolder extends RecyclerView.ViewHolder{
         private final TextView titulo;
         private final TextView descricao;
+        private Nota nota;
 
         public NotaViewHolder(View itemView) {
             super(itemView);
             descricao = itemView.findViewById(R.id.item_nota_titulo);
             titulo = itemView.findViewById(R.id.item_nota_descricao);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(nota);
+                }
+            });
         }
 
         public void vincula(Nota nota){
+            this.nota = nota;
             preencheCampos(nota);
         }
 
