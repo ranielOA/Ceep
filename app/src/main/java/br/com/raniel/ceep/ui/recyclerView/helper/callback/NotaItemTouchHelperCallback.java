@@ -7,7 +7,7 @@ import br.com.raniel.ceep.dao.NotaDAO;
 import br.com.raniel.ceep.ui.recyclerView.adapter.ListaNotasAdapter;
 
 public class NotaItemTouchHelperCallback extends ItemTouchHelper.Callback {
-    private ListaNotasAdapter adapter;
+    private final ListaNotasAdapter adapter;
 
     public NotaItemTouchHelperCallback(ListaNotasAdapter adapter) {
         this.adapter = adapter;
@@ -15,19 +15,32 @@ public class NotaItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int marcacoesDeDeslize  = ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
-        return makeMovementFlags(0, marcacoesDeDeslize);
+        int marcacoesDeDeslize = ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
+        int marcacoesDeArrastar = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
+        return makeMovementFlags(marcacoesDeArrastar, marcacoesDeDeslize);
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        int posicaoInicial = viewHolder.getAdapterPosition();
+        int posicaoFinal = target.getAdapterPosition();
+        trocaNotas(posicaoInicial, posicaoFinal);
         return false;
+    }
+
+    private void trocaNotas(int posicaoInicial, int posicaoFinal) {
+        new NotaDAO().troca(posicaoInicial, posicaoFinal);
+        adapter.troca(posicaoInicial, posicaoFinal);
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int posicaoDaNotaDeslizada = viewHolder.getAdapterPosition();
-        new NotaDAO().remove(posicaoDaNotaDeslizada);
-        adapter.remove(posicaoDaNotaDeslizada);
+        removeNota(posicaoDaNotaDeslizada);
+    }
+
+    private void removeNota(int posicao) {
+        new NotaDAO().remove(posicao);
+        adapter.remove(posicao);
     }
 }

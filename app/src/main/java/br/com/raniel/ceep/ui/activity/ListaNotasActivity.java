@@ -129,11 +129,15 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void configuraRecyclerView(List<Nota> todasNotas) {
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recycleview);
         configuraAdapter(todasNotas, listaNotas);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelperCallback(adapter));
-        itemTouchHelper.attachToRecyclerView(listaNotas);
+        configuraItemTouchHelper(listaNotas);
 
 //        configuraLayoutManager(listaNotas); //configura o layoutmanager por codigo, porém pode-se configurar direto no xml quando ele for fixo com app:layoutManager
 //                                              para colocar um gridlayout adiciona-se o app:spanCount para definir o numero de colunas
+    }
+
+    private void configuraItemTouchHelper(RecyclerView listaNotas) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(listaNotas);
     }
 
     private void configuraLayoutManager(RecyclerView listaNotas) {
