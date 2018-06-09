@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import br.com.raniel.ceep.dao.NotaDAO;
 import br.com.raniel.ceep.model.Nota;
 import br.com.raniel.ceep.ui.recyclerView.adapter.ListaNotasAdapter;
 import br.com.raniel.ceep.ui.recyclerView.adapter.listener.OnItemClickListener;
+import br.com.raniel.ceep.ui.recyclerView.helper.callback.NotaItemTouchHelperCallback;
 
 import static br.com.raniel.ceep.ui.activity.NotaActivityConstantes.CHAVE_NOTA;
 import static br.com.raniel.ceep.ui.activity.NotaActivityConstantes.CHAVE_POSICAO;
@@ -41,14 +43,14 @@ public class ListaNotasActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (ehUmResultadoInsereNota(requestCode, data)) {
-            if(resultadoOk(resultCode)) {
+            if (resultadoOk(resultCode)) {
                 Nota nota = (Nota) data.getSerializableExtra(CHAVE_NOTA);
                 adiciona(nota);
             }
         }
 
         if (ehResultadoAlteraNota(requestCode, data)) {
-            if(resultadoOk(resultCode)) {
+            if (resultadoOk(resultCode)) {
                 Nota nota = (Nota) data.getSerializableExtra(CHAVE_NOTA);
                 int posicaoRecebida = data.getIntExtra(CHAVE_POSICAO, POSICAO_INVALIDA);
                 if (ehPosicaoValida(posicaoRecebida)) {
@@ -127,6 +129,9 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void configuraRecyclerView(List<Nota> todasNotas) {
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recycleview);
         configuraAdapter(todasNotas, listaNotas);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NotaItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(listaNotas);
+
 //        configuraLayoutManager(listaNotas); //configura o layoutmanager por codigo, porém pode-se configurar direto no xml quando ele for fixo com app:layoutManager
 //                                              para colocar um gridlayout adiciona-se o app:spanCount para definir o numero de colunas
     }
