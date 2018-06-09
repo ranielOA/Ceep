@@ -19,6 +19,8 @@ import static br.com.raniel.ceep.ui.activity.NotaActivityConstantes.POSICAO_INVA
 public class FormularioNotaActivity extends AppCompatActivity {
 
 
+    public static final String TITULO_APPBAR_INSERE = "Insere Nota";
+    public static final String TITULO_APPBAR_ALTERA = "Altera Nota";
     private int posicao = POSICAO_INVALIDA;
     private EditText titulo;
     private EditText descricao;
@@ -28,10 +30,12 @@ public class FormularioNotaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_nota);
 
+        setTitle(TITULO_APPBAR_INSERE);
         inicializaCampos();
 
         Intent dadosRecebidos = getIntent();
         if (dadosRecebidos.hasExtra(CHAVE_NOTA)) {
+            setTitle(TITULO_APPBAR_ALTERA);
             Nota notaRecebida = (Nota) dadosRecebidos.getSerializableExtra(CHAVE_NOTA);
             posicao = dadosRecebidos.getIntExtra(CHAVE_POSICAO, POSICAO_INVALIDA);
             preencheCampos(notaRecebida);

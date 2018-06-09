@@ -47,7 +47,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
 
     public void adiciona(Nota nota){
         notas.add(nota);
-        notifyDataSetChanged();
+        notifyDataSetChanged(); //também possui metodo proprio com o notifyItemInserted()
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -56,17 +56,17 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
 
     public void altera(int posicao, Nota nota) {
         notas.set(posicao, nota);
-        notifyDataSetChanged();
+        notifyItemChanged(posicao); //metodos mais especificos adicionam animações próprias para o evento
     }
 
     public void remove(int posicao) {
         notas.remove(posicao);
-        notifyDataSetChanged();
+        notifyItemRemoved(posicao); //metodos mais especificos adicionam animações próprias para o evento
     }
 
     public void troca(int posicaoInicial, int posicaoFinal) {
         Collections.swap(notas, posicaoInicial, posicaoFinal);
-        notifyDataSetChanged();
+        notifyItemMoved(posicaoInicial, posicaoFinal); //metodos mais especificos adicionam animações próprias para o evento
     }
 
     class NotaViewHolder extends RecyclerView.ViewHolder{

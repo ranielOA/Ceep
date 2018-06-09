@@ -28,12 +28,15 @@ import static br.com.raniel.ceep.ui.activity.NotaActivityConstantes.POSICAO_INVA
 
 public class ListaNotasActivity extends AppCompatActivity {
 
+    public static final String TITULO_APPBAR = "Notas";
     private ListaNotasAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_notas);
+
+        setTitle(TITULO_APPBAR);
 
         List<Nota> todasNotas = pegaTodasNotas();
         configuraRecyclerView(todasNotas);
@@ -92,7 +95,7 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private boolean temNota(Intent data) {
-        return data.hasExtra(CHAVE_NOTA);
+        return  data != null && data.hasExtra(CHAVE_NOTA);
     }
 
     private boolean resultadoOk(int resultCode) {
@@ -120,9 +123,9 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private List<Nota> pegaTodasNotas() {
         NotaDAO dao = new NotaDAO();
-        for (int i = 0; i < 10; i++) {
-            dao.insere(new Nota("titulo " + (i + 1), "descrição " + (i + 1)));
-        }
+//        for (int i = 0; i < 10; i++) {                                            // inserindo notas de exemplo
+//            dao.insere(new Nota("titulo " + (i + 1), "descrição " + (i + 1)));
+//        }
         return dao.todos();
     }
 
