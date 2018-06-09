@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.io.Serializable;
+
 import br.com.raniel.ceep.R;
 import br.com.raniel.ceep.model.Nota;
 
@@ -16,10 +18,23 @@ import static br.com.raniel.ceep.ui.activity.NotaActivityConstantes.CODIGO_RESUL
 
 public class FormularioNotaActivity extends AppCompatActivity {
 
+    private int posicao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_nota);
+
+        Intent dadosRecebidos = getIntent();
+        if(dadosRecebidos.hasExtra(CHAVE_NOTA) && dadosRecebidos.hasExtra("posicao")){
+            Nota notaRecebida = (Nota) dadosRecebidos.getSerializableExtra(CHAVE_NOTA);
+            posicao = dadosRecebidos.getIntExtra("posicao", -1);
+
+            EditText titulo = findViewById(R.id.formulario_nota_titulo);
+            titulo.setText(notaRecebida.getTitulo());
+            EditText descricao = findViewById(R.id.formulario_nota_descricao);
+            descricao.setText(notaRecebida.getDescricao());
+        }
     }
 
     @Override
@@ -41,6 +56,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private void retornaNota(Nota nota) {
         Intent resultado = new Intent();
         resultado.putExtra(CHAVE_NOTA, nota);
+        resultado.putExtra("posicao", posicao);
         setResult(CODIGO_RESULTADO_NOTA_CRIADA, resultado);
     }
 
