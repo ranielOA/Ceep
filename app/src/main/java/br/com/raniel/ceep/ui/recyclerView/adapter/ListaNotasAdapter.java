@@ -65,8 +65,8 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
 
         public NotaViewHolder(View itemView) {
             super(itemView);
-            descricao = itemView.findViewById(R.id.item_nota_titulo);
-            titulo = itemView.findViewById(R.id.item_nota_descricao);
+            titulo = itemView.findViewById(R.id.item_nota_titulo);
+            descricao = itemView.findViewById(R.id.item_nota_descricao);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
